@@ -1,6 +1,5 @@
 // script.js - Gemini AI 연동 버전
-const GEMINI_API_KEY = AIzaSyCQEBAM9IWwNZAU9A7DZTG7rvTn2jRijJk;   // ← 반드시 변경!
-
+const GEMINI_API_KEY = "AIzaSyCQEBAM9IWwNZAU9A7DZTG7rvTn2jRijJk";   // ← 따옴표 꼭 넣기!
 
 async function summarizeText() {
     const transcript = document.getElementById('transcript').value.trim();
@@ -11,8 +10,9 @@ async function summarizeText() {
         return;
     }
 
-    if (GEMINI_API_KEY.includes("여기에")) {
-        alert("Gemini API Key를 script.js에 먼저 넣어주세요!");
+    // API Key 확인
+    if (!GEMINI_API_KEY || GEMINI_API_KEY.length < 10) {
+        alert("Gemini API Key를 script.js에 올바르게 입력해주세요!");
         return;
     }
 
@@ -25,15 +25,20 @@ async function summarizeText() {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `다음 YouTube 영상 스크립트를 자연스럽고 읽기 쉽게 한국어로 요약해주세요. 주요 내용 위주로 300~400자 정도로 정리해 주세요.\n\n${transcript}`
+                        text: `다음 YouTube 영상 스크립트를 자연스럽고 읽기 쉽게 한국어로 요약해주세요. 
+                               주요 내용과 핵심 포인트를 위주로 300~450자 정도로 정리해 주세요.\n\n${transcript}`
                     }]
                 }]
             })
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP 오류: ${response.status}`);
+        }
+
         const data = await response.json();
         
-        if (data.candidates && data.candidates[0]) {
+        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
             const summaryText = data.candidates[0].content.parts[0].text;
             
             summaryDiv.innerHTML = `
@@ -44,18 +49,24 @@ async function summarizeText() {
                 </button>
             `;
         } else {
-            throw new Error("응답 처리 실패");
+            throw new Error("Gemini 응답 형식 오류");
         }
 
     } catch (error) {
         console.error(error);
-        summaryDiv.innerHTML = `<p style="color:red;">❌ 요약 중 오류가 발생했습니다.<br>API Key를 확인하거나 잠시 후 다시 시도해주세요.</p>`;
+        summaryDiv.innerHTML = `
+            <p style="color:red;">
+                ❌ 요약 중 오류가 발생했습니다.<br><br>
+                ${error.message}<br><br>
+                API Key가 올바른지, 사용량 제한이 초과되지 않았는지 확인해주세요.
+            </p>`;
     }
 }
 
 function copySummary() {
     const summaryDiv = document.getElementById('summary');
-    const text = summaryDiv.innerText.replace('📋 Gemini AI 요약 결과', '').trim();
+    let text = summaryDiv.innerText;
+    text = text.replace('📋 Gemini AI 요약 결과', '').trim();
     
     navigator.clipboard.writeText(text).then(() => {
         alert('✅ 요약 내용이 복사되었습니다!');
