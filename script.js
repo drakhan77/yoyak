@@ -1,5 +1,6 @@
 // script.js - Gemini AI 연동 버전
-const GEMINI_API_KEY = "AIzaSyCQEBAM9IWwNZAU9A7DZTG7rvTn2jRijJk";   // ← 반드시 변경!
+const GEMINI_API_KEY = AIzaSyCQEBAM9IWwNZAU9A7DZTG7rvTn2jRijJk;   // ← 반드시 변경!
+
 
 async function summarizeText() {
     const transcript = document.getElementById('transcript').value.trim();
