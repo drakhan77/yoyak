@@ -3,15 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나의 첫 요약</title>
-  <link rel="stylesheet" href="style.css">
+  <title>요약 - YouTube 스크립트 요약기</title>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+    button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #cc0000;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    #summary {
+      background: #f0f8ff;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .status {
+      text-align: center;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
-  <h1>안녕! 🚀</h1>
-  <p>내 첫 번째 test 5 요약입니다.</p>
-  <button id="myButton">클릭해보기</button>
+  <h1>📝 요약</h1>
+  <p class="subtitle">YouTube 영상 스크립트를 쉽고 빠르게 요약해드려요</p>
+
+  <div class="section">
+    <h3>1. YouTube URL (참고용)</h3>
+    <input type="text" id="url" placeholder="https://www.youtube.com/watch?v=...">
+  </div>
+
+  <div class="section">
+    <h3>2. 자막 붙여넣기</h3>
+    <textarea id="transcript" rows="12" placeholder="YouTube에서 자막을 복사해서 여기에 붙여넣으세요..."></textarea>
+  </div>
+
+  <button onclick="summarizeText()">✨ AI로 요약하기</button>
+
+  <div class="section">
+    <h3>📋 요약 결과</h3>
+    <div id="summary" class="result"></div>
+  </div>
 
   <script src="script.js"></script>
-
 </body>
 </html>
