@@ -1,25 +1,48 @@
+// script.js
 function summarizeText() {
     const transcript = document.getElementById('transcript').value.trim();
     const summaryDiv = document.getElementById('summary');
-    const statusDiv = document.createElement('div');
-    
+    const url = document.getElementById('url').value.trim();
+
     if (!transcript) {
         alert('자막을 먼저 붙여넣어주세요!');
         return;
     }
 
-    summaryDiv.innerHTML = '<p>요약 중입니다... 잠시만 기다려주세요.</p>';
+    summaryDiv.innerHTML = `
+        <div class="loading">
+            <p>🤖 AI가 요약하고 있습니다...</p>
+        </div>
+    `;
 
-    // 간단한 규칙 기반 요약 (나중에 Grok, Gemini, GPT 등으로 교체 가능)
-    const sentences = transcript.split(/[.!?]/).filter(s => s.length > 10);
-    const summary = sentences.slice(0, 15).join('. ') + '...';
-
+    // 더 자연스럽게 요약하는 로직
     setTimeout(() => {
+        let summary = '';
+
+        if (transcript.length < 300) {
+            summary = transcript;
+        } else {
+            // 간단하지만 좀 더 똑똑한 요약 시도
+            const sentences = transcript.split(/[.!?。！？]/).filter(s => s.length > 15);
+            const mainPoints = sentences.slice(0, 12);
+            summary = mainPoints.join('. ') + '.';
+        }
+
         summaryDiv.innerHTML = `
-            <strong>요약 결과</strong><br><br>
+            <strong>📋 요약 결과</strong><br><br>
             ${summary}<br><br>
-            <small>※ 현재는 간단 규칙 기반 요약입니다.<br>
-            나중에 AI API(Grok, Gemini 등)를 연결하면 훨씬 자연스럽게 요약됩니다.</small>
+            <button onclick="copySummary()" style="background:#007bff; width:auto; padding:10px 20px;">
+                📋 요약 복사하기
+            </button>
         `;
-    }, 800);
+    }, 900);
+}
+
+function copySummary() {
+    const summaryDiv = document.getElementById('summary');
+    const text = summaryDiv.innerText.replace('📋 요약 결과', '').trim();
+    
+    navigator.clipboard.writeText(text).then(() => {
+        alert('✅ 요약이 복사되었습니다!');
+    });
 }
